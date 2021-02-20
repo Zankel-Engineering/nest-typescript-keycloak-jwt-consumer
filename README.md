@@ -1,4 +1,4 @@
-This is a [Nest Js](https://github.com/nestjs/nest) project configured for Docker
+This is a sample microservice which uses keycloak Role decorators.
 
 ## Installation
 

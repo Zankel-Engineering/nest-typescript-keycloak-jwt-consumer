@@ -6,7 +6,6 @@ import {
   DiskHealthIndicator,
 } from '@nestjs/terminus';
 import { Injectable } from '@nestjs/common';
-import { DogHealthIndicatorService } from './dog.health';
 
 @Injectable()
 export class TerminusOptionsService implements TerminusOptionsFactory {

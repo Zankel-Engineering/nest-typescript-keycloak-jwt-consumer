@@ -1,26 +1,28 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TerminusModule } from '@nestjs/terminus';
-import { TerminusOptionsService } from './terminus-options.service';
-import { DogHealthIndicatorService } from './dog.health';
-import { RedisModule } from 'nestjs-redis';
+import { PracticeTimesModule } from './practice-times/practice-times.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    // RedisModule.register({
-    //   host: process.env.REDIS_HOST,
-    //   port: parseInt(process.env.REDIS_PORT),
-    //   db: parseInt(process.env.REDIS_DB),
-    //   password: process.env.REDIS_PASSWORD,
-    //   keyPrefix: process.env.REDIS_PRIFIX,
-    // } as any),
     TerminusModule.forRootAsync({
-      useClass: TerminusOptionsService,
+      useFactory: () => ({
+        disableDeprecationWarnings: true,
+        endpoints: [
+          // ...
+        ],
+      }),
+    }),
+    PracticeTimesModule,
+    MongooseModule.forRoot(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      user: process.env.MONGODB_USER,
+      pass: process.env.MONGODB_PASS,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
-  exports: [AppService],
+  controllers: [],
+  providers: [],
+  exports: [],
 })
-export class AppModule {}
+export class AppModule {
+}

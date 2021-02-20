@@ -1,17 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as LogRocket from 'logrocket';
-
-LogRocket.init('v5s4eb/qf-dev');
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as helmet from 'helmet';
+import * as rateLimit from 'express-rate-limit';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  LogRocket.identify('Mzitoh', {
-    name: 'Dennoh Mzitoh',
-    email: 'denno@mzitoh.com',
-    subscriptionType: 'pro',
-  });
-
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  app.use(cookieParser());
+  app.use(helmet());
+  // app.use(csurf());
+  app.use(rateLimit({
+    windowMs:  15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  }));
+  const options = new DocumentBuilder()
+    .setTitle('UDC microservice practice times')
+    .setDescription('Allows user to crud their practice times.')
+    .setVersion('0.0.1')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
+  await app.listen(3001);
 }
 bootstrap();
